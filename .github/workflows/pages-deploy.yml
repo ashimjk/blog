@@ -1,4 +1,4 @@
-name: 'Automatic build'
+name: 'Build Blog Site'
 on:
   push:
     branches:
@@ -9,7 +9,7 @@ on:
       - LICENSE
 
 jobs:
-  continuous-delivery:
+  build-pages:
 
     runs-on: ubuntu-latest
 
