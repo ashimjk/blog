@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "Multiple SSH Support"
-category: git
+title: Multiple SSH Support
+date: 2021-05-06 23:57 +0545
+categories: git
 tags: git
-date:   2021-05-06 11:08:37 +0000
 ---
 
 ## SSH Commands
