@@ -21,6 +21,7 @@ Browse project
 * Copy files
 
 ``` 
+
 _data
 _plugins
 _tabs
@@ -39,10 +40,12 @@ index.html
 
 * [Jekyll Requirement](https://jekyllrb.com/docs/installation/)
 
-* [Jekyll Quickstart](https://jekyllrb.com/docs/)
+* [Jekyll Quick-start](https://jekyllrb.com/docs/)
 
 * [Jekyll Chirpy Theme](https://github.com/cotes2020/jekyll-theme-chirpy/)
 
 * [Chirpy Starter](https://github.com/cotes2020/chirpy-starter)
 
-* [Jekyll:: Compose](https://github.com/jekyll/jekyll-compose)
+* [Jekyll Compose](https://github.com/jekyll/jekyll-compose)
+
+* [Jekyll Troubleshoot](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll)

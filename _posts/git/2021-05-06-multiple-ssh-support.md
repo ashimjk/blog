@@ -1,88 +1,113 @@
 ---
 layout: post
-title: Multiple SSH Support
+title: Manage Multiple SSH Keys
 date: 2021-05-06 23:57 +0545
 categories: git
 tags: git
 ---
 
-## SSH Commands
+## Scenario
+
+I have multiple SSH keys, want to manage them without any trouble.
+I can do it in various ways:
+
+1. creating a directory for ssh key and switch every time I need to or even create a script for that.
+2. use the same ssh key for all accounts like Github, Bitbucket, Gitlab, etc. But there is one catch, which is
+I cannot use the same ssh key on the same server like Github.
+4. Create a separate ssh key for all accounts and manage it using ssh config, which I am going to use in this post.
+
+## Assumptions
+
+1. You have basic knowledge about Git and SSH.
+2. All your generated ssh keys will be inside the `~/.ssh` directory.
+
+## Step to create ssh config
+
+1. Generate ssh key for your account. The following command will generate private and public keys.
+``` shell
+ssh-keygen -t ed25519 -C "<EMAIL_ADDRESS>"
+```
+
+2. Rename your ssh key and give it some meaningful name like in my case:
+``` shell
+mv ~/.ssh/id_ed25519 ~/.ssh/github_id_ed25519
+```
+
+3. Repeat 1 & 2 Steps for all your accounts
+
+4. Create `config` file inside `.ssh` directory
+``` shell
+touch ~/.ssh/config
+```
+
+5. Add the following configuration inside your `config` file. You can add/remove based on your needs:
+
+    ``` config
+    # GitHub Account 1
+    Host github.com
+    HostName github.com
+    User <USER_NAME_1>
+    IdentityFile ~/.ssh/github_id_ed25519
+
+    # Github Account 2
+    Host github.com-<USER_NAME_2>
+    HostName github.com
+    User <USER_NAME_2>
+    IdentityFile ~/.ssh/github2_id_ed25519
+
+    # Gitlab Account
+    Host gitlab.com
+    HostName gitlab.com
+    User <USER_NAME>
+    IdentityFile ~/.ssh/gitlab_id_ed25519
+
+    # Bitbucket Account
+    Host bitbucket.org
+    HostName bitbucket.org
+    User <USER_NAME>
+    IdentityFile ~/.ssh/bucket_id_ed25519
+    ```
+
+### Note:
+
+For the Github account, we have defined two accounts.
+
+* One with default HostName
+* Another with extra content append to default HostName, which is `USERNAME_2`
+
+Also, note that I have added `dash (-)` after the HostName.
+
+## How to use it
+
+It's simple. Just do what you were doing with a single SSH key for all accounts including GitHub Account 1.
+
+But for GitHub Account 2, we have to handle it differently.
+
+Let's say if we have a URL like this `git@github.com:<USER_NAME_2>/project.git`
+
+then we need to append git@github.com `-<USER_NAME_2>` :<USER_NAME_2>/project.git.
+It's the only thing that we have to do before we use it.
 
 ``` shell
-# restart ssh-agent
+# For Github Account 2
+# Instead of this
+git clone git@github.com:<USER_NAME_2>/project.git
+
+# We have to use it in this way
+git clone git@github.com-<USER_NAME_2>:<USER_NAME_2>/project.git
+```
+
+## Some useful SSH command
+
+* If your ssh-agent failed then you can restart it using the following command
+``` shell
 eval $(ssh-agent -s)
-
-# remove all registered ssh keys
-ssh-add -D
-
-# list registered keys
+```
+* If you want to list all registered keys
+``` shell
 ssh-add -l
-
-# generate ssh key
-ssh-keygen -t ed25519 -C "ashim.jung.khadka@gmail.com"         
 ```
-
-## Register ssh private key
-
-Although its automatically registerd but in case if needed
-
+* If you want to clear all registered keys
 ``` shell
-ssh-add ~/.ssh/ashimjk_id_ed25519
-
-ssh-add ~/.ssh/ajk_hub_id_ed25519
-
-ssh-add ~/.ssh/clusus_id_ed25519
-
-ssh-add ~/.ssh/bucket_id_ed25519
+ssh-add -D
 ```
-
-## Git Config
-
-Create config file in ~/.ssh/config and add following config as per needed
-
-``` 
-
-# AshimJK GitHub account
-Host github.com
- HostName github.com
- User ashimjk
- IdentityFile ~/.ssh/ashimjk_id_ed25519
-
-# AJK-Hub GitHub account
-Host github.com-ajk-hub
- HostName github.com
- User ajk-hub
- IdentityFile ~/.ssh/ajk_hub_id_ed25519
-
-# Gitlab account
-Host gitlab.com
- HostName gitlab.com
- User ps.ashim.khadka
- IdentityFile ~/.ssh/clusus_id_ed25519
-
-# Bitbucket account
-Host bitbucket.org
- HostName bitbucket.org
- User ashimjk
- IdentityFile ~/.ssh/bucket_id_ed25519
-```
-
-## For Testing
-
-``` shell
-git clone git@github.com:ashimjk/py-sdk.git
-
-git clone git@github.com-ajk-hub:ajk-hub/testing.git
-
-git clone git@gitlab.com:progressoft/kryptonite/corpay-ui/system-config-ui.git
-
-git clone git@bitbucket.org:ashimjk/sdk-tool.git
-```
-
-## References
-
-* [SSH Config Docs](https://linux.die.net/man/5/ssh_config)
-
-* [Use multiple ssh-keys](https://xiaolishen.medium.com/use-multiple-ssh-keys-for-different-github-accounts-on-the-same-computer-7d7103ca8693)
-
-* [Manage SSH Keys](https://www.freecodecamp.org/news/how-to-manage-multiple-ssh-keys/)
