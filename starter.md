@@ -36,6 +36,22 @@ index.html
 
 > jekyll post <file-name>
 
+## Install plantuml.jar
+Then, make sure [PlantUML](http://plantuml.sourceforge.net/download.html) is installed on your build machine, and can be executed with a simple plantuml command.
+
+For Linux user, you could create a /usr/bin/plantuml with contents:
+```shell
+#!/bin/bash
+java -jar $(pwd)/plantuml.jar "$1" "$2"
+```
+
+Remember to change the path to plantuml.jar file.
+
+Then set executable permission.
+```shell
+cp plantuml /usr/bin/plantuml
+chmod +x /usr/bin/plantuml
+```
 ## References
 
 * [Jekyll Requirement](https://jekyllrb.com/docs/installation/)
@@ -49,3 +65,5 @@ index.html
 * [Jekyll Compose](https://github.com/jekyll/jekyll-compose)
 
 * [Jekyll Troubleshoot](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll)
+
+* [Jekyll PlantUML](https://github.com/yegor256/jekyll-plantuml)

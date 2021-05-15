@@ -2,8 +2,8 @@
 layout: post
 title: Precondition in Controller and Service
 date: 2021-05-07 01:12 +0545
-categories: spring, validation
-tags: spring, validation
+categories: spring-validation, validation
+tags: spring-validation, validation
 ---
 
 ## Problem
