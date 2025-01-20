@@ -13,7 +13,7 @@ I can do it in various ways:
 
 1. creating a directory for ssh key and switch every time I need to or even create a script for that.
 2. use the same ssh key for all accounts like Github, Bitbucket, Gitlab, etc. But there is one catch, which is
-I cannot use the same ssh key on the same server like Github.
+   I cannot use the same ssh key on the same server like Github.
 4. Create a separate ssh key for all accounts and manage it using ssh config, which I am going to use in this post.
 
 ## Assumptions
@@ -24,11 +24,13 @@ I cannot use the same ssh key on the same server like Github.
 ## Step to create ssh config
 
 1. Generate ssh key for your account. The following command will generate private and public keys.
+
 ``` shell
 ssh-keygen -t ed25519 -C "<EMAIL_ADDRESS>"
 ```
 
 2. Rename your ssh key and give it some meaningful name like in my case:
+
 ``` shell
 mv ~/.ssh/id_ed25519 ~/.ssh/github_id_ed25519
 ```
@@ -36,6 +38,7 @@ mv ~/.ssh/id_ed25519 ~/.ssh/github_id_ed25519
 3. Repeat 1 & 2 Steps for all your accounts
 
 4. Create `config` file inside `.ssh` directory
+
 ``` shell
 touch ~/.ssh/config
 ```
@@ -100,14 +103,19 @@ git clone git@github.com-<USER_NAME_2>:<USER_NAME_2>/project.git
 ## Some useful SSH command
 
 * If your ssh-agent failed then you can restart it using the following command
+
 ``` shell
 eval $(ssh-agent -s)
 ```
+
 * If you want to list all registered keys
+
 ``` shell
 ssh-add -l
 ```
+
 * If you want to clear all registered keys
+
 ``` shell
 ssh-add -D
 ```

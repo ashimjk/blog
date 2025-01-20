@@ -12,18 +12,21 @@ parts of it.
 
 So, let's wait for the docker dependencies...
 
-If we run [docker-compose.yml](https://github.com/ashimjk/docker-compose-wait/blob/master/docker-compose.yml) then `waiting-for-rabbitmq` will print
+If we run [docker-compose.yml](https://github.com/ashimjk/docker-compose-wait/blob/master/docker-compose.yml) then
+`waiting-for-rabbitmq` will print
 `Waiting for rabbitmq...` until `rabbitmq` starts. Sometimes it's expected behavior but not for us.
 
 There are many ways to resolve it and we will look into this one by one.
 
-
 ## Approach 1: Run the dependencies first
+
 First, we will run the dependency along with its status checker service. Once the status is green,
 then we will run all the other dependent services.
 
 Let's create a scenario, where we will have a `web` service that will depend on `rabbitmq`.
-Now we will add another service in the [docker-compose.yml](https://github.com/ashimjk/docker-compose-wait/blob/master/approach-1/docker-compose.yml) file, which is like this.
+Now we will add another service in
+the [docker-compose.yml](https://github.com/ashimjk/docker-compose-wait/blob/master/approach-1/docker-compose.yml) file,
+which is like this.
 
 ```yml
 services:
@@ -54,24 +57,29 @@ services:
 ```
 
 ### How to run
+
 - Run `docker-compose up waiting_for_rabbitmq` command
-  - It will start `rabbitmq` service
-  - `waiting_for_rabbitmq` service will wait for `rabbitmq` to be started
-  - Once, it is started, it will print `5672 (IP:5672) open` in the console
+    - It will start `rabbitmq` service
+    - `waiting_for_rabbitmq` service will wait for `rabbitmq` to be started
+    - Once, it is started, it will print `5672 (IP:5672) open` in the console
 - Now, run `docker-compose up web`
 
 Although it's a sequential approach it will do the work for us.
 
 Reference:
+
 - [Article](https://8thlight.com/blog/dariusz-pasciak/2016/10/17/docker-compose-wait-for-dependencies.html)
 - [GitHub](https://github.com/dadarek/docker-wait-for-dependencies)
 
-
 ## Approach 2: Using health checks
-When we run [docker-compose.yml](https://github.com/ashimjk/docker-compose-wait/blob/master/approach-2/docker-compose.yml) file, first it will run `rabbitmq` service,
+
+When we
+run [docker-compose.yml](https://github.com/ashimjk/docker-compose-wait/blob/master/approach-2/docker-compose.yml) file,
+first it will run `rabbitmq` service,
 and will wait for its status to be `healthy`.
 
 Once, it's ready, `web` service will be started and will print the following in the console:
+
 ```
 ajk_web     | rabbitmq (172.22.0.2:5672) open
 ajk_web       exited with code 0
@@ -110,11 +118,13 @@ in the `web` service to get the same behavior. One thing to keep in mind is, now
 until `rabbitmq` status is healthy.
 
 Reference:
+
 - [Health Checks](https://docs.docker.com/compose/compose-file/compose-file-v3/#healthcheck)
 - [Depends-On V2](https://docs.docker.com/compose/compose-file/compose-file-v2/#depends_on)
 - [Depends-On V3](https://docs.docker.com/compose/compose-file/compose-file-v3/#depends_on)
 
 ## Other ways to do it
+
 - [wait-for-it](https://github.com/vishnubob/wait-for-it)
 - [dockerize](https://github.com/jwilder/dockerize)
 - [goss](https://github.com/aelsabbahy/goss)

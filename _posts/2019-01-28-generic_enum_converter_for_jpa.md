@@ -1,11 +1,12 @@
 ---
 title: Generic Enum Converter for JPA
 date: 2019-01-28 00:49:46 +0545
-categories: [technology]
-tags: [jpa]
+categories: [ technology ]
+tags: [ jpa ]
 ---
 
 ## Description
+
 In following example, we have define QualityMeasureType enum and used in class using @Enumerated annotation.
 Here, JPA will convert enum value into string and store it in db and vice-versa.
 
@@ -23,6 +24,7 @@ So, the problem here is if we try to store additional value in db, shown in belo
 'P' value in db then it cannot convert it to PUBLIC.
 
 To support this, we need to add some converter which converts this data into enum and enum into data.
+
 ``` java
 enum SavedQmListScope {
 	PUBLIC("P"),
@@ -34,26 +36,32 @@ private SavedQmListScope scope;
 ```
 
 To resolve this issue, there are many ways to do it:
+
 - By using javax.persistence.AttributeConverter interface
 - Define a custom annotation, patch the JPA provider to recognize this annotation
 
 ## Problem:
+
 How to solve above issue for enum which have additional value using JPA/Hibernate?
 How to make it workable for all type of enum?
 
 ## Solution 1:
+
 We can create a custom converter implementing AttibuteConverter. And then inject it into the property field.
 But there may be a chance that every enum will be having their own converter.
-So in-order to reduce the process of writing an enum converter class to pure boilerplate. The components of this solution are:
+So in-order to reduce the process of writing an enum converter class to pure boilerplate. The components of this
+solution are:
 
 - **PersistableEnum Interface:**
-The contract for an enum class that grants access to a String value for each enum constant (also a factory for getting the enum constant for a matching value)
+  The contract for an enum class that grants access to a String value for each enum constant (also a factory for getting
+  the enum constant for a matching value)
 
 - **AbstractEnumConverter Class:** Provides the common code for translating values to/from enum constants
 - **Java Enum Classes:** That implement the PersistableEnum interface
 - **JPA Converter Classes:** That extend the AbstractEnumConverter class
 
 The PersistableEnum interface is simple and contains a static factory method, forValue(), for obtaining enum constants:
+
 ``` java
 public interface PersistableEnum {
 
@@ -70,7 +78,10 @@ public interface PersistableEnum {
 }
 ```
 
-The AbstractEnumConverter class is a generic class that is also simple. It implements the JPA 2.1 AttributeConverter interface but provides no implementations for its methods (because this class can't know the concrete types needed for obtaining the appropriate enum constants). Instead, it defines helper methods that the concrete converter classes will chain to:
+The AbstractEnumConverter class is a generic class that is also simple. It implements the JPA 2.1 AttributeConverter
+interface but provides no implementations for its methods (because this class can't know the concrete types needed for
+obtaining the appropriate enum constants). Instead, it defines helper methods that the concrete converter classes will
+chain to:
 
 ``` java
 public abstract class AbstractEnumConverter<E extends Enum<E> & PersistableEnum>
@@ -90,7 +101,9 @@ public abstract class AbstractEnumConverter<E extends Enum<E> & PersistableEnum>
 }
 ```
 
-An example of a concrete enum class that could now be persisted to a database with the JPA 2.1 Converter facility is shown below (note that it implements PersistableEnum, and that the value for each enum constant is defined as a private field):
+An example of a concrete enum class that could now be persisted to a database with the JPA 2.1 Converter facility is
+shown below (note that it implements PersistableEnum, and that the value for each enum constant is defined as a private
+field):
 
 ``` java
 public enum SavedQmListScope implements PersistableEnum {
@@ -111,7 +124,8 @@ public enum SavedQmListScope implements PersistableEnum {
 }
 ```
 
-The boilerplate for every JPA 2.1 Converter class would now look like this (note that every such converter will need to extend AbstractEnumConverter and provide implementations for the methods of the JPA AttributeConverter interface):
+The boilerplate for every JPA 2.1 Converter class would now look like this (note that every such converter will need to
+extend AbstractEnumConverter and provide implementations for the methods of the JPA AttributeConverter interface):
 
 ``` java
 @Converter
@@ -130,9 +144,11 @@ public class SavedQmListScopeConverter extends AbstractEnumConverter<SavedQmList
 ```
 
 ## Solution 2:
+
 By extending **Solution 1**, we can enhance its funtionality by making it more generic:
 
 Interface enum must implement:
+
 ``` java
 public interface PersistableEnum<T> {
     public T getValue();
@@ -140,6 +156,7 @@ public interface PersistableEnum<T> {
 ```
 
 Base abstract converter:
+
 ``` java
 @Converter
 public abstract class AbstractEnumConverter<T extends Enum<T> & PersistableEnum<E>, E> implements AttributeConverter<T, E> {
@@ -170,6 +187,7 @@ public abstract class AbstractEnumConverter<T extends Enum<T> & PersistableEnum<
 ```
 
 You must create a converter class for each enum, I find it easier to create static class inside the enum:
+
 ``` java
 public enum SavedQmListScope implements PersistableEnum<String> {
 
@@ -196,6 +214,7 @@ public enum SavedQmListScope implements PersistableEnum<String> {
 ```
 
 And mapping example with annotation:
+
 ``` java
 class SavedQmList {
 	@Convert(converter = SavedQmListScope.Converter.class)
