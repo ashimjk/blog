@@ -64,9 +64,12 @@ We should validate the controller and defensive programming in our service.
 
 ### Validation :
 
-We need to validate for forms and REST requests so that we can send a sensible error back to the client. This includes what fields are bad and then doing localization of the error messages... etc... In the above example, validation error would send a 500 error message with a stack trace if ProductInfo.name property is null which is not a good message for the end-user.
+We need to validate for forms and REST requests so that we can send a sensible error back to the client. This includes
+what fields are bad and then doing localization of the error messages... etc... In the above example, validation error
+would send a 500 error message with a stack trace if ProductInfo.name property is null which is not a good message for
+the end-user.
 
-For this problem, Spring has a solution for [validating objects in the controller](http://static.springsource.org/spring/docs/current/spring-framework-reference/html/validation.html).
+For this problem, Spring has a solution for [validating objects in the controller](https://docs.spring.io/spring-framework/docs/4.1.x/spring-framework-reference/html/validation.html).
 
 ### Defensive programming :
 
