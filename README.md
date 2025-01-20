@@ -1,1 +1,1 @@
-# blog-pages
+# Blog Pages
