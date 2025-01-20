@@ -4,3 +4,6 @@ _site
 .jekyll-metadata
 vendor
 .vscode
+node_modules
+**/.DS_Store
+**/.idea
