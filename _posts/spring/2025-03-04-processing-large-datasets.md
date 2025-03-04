@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Processing Large Datasets Efficiently with Spring Boot and JDK
-date: 2025-03-04 12:52 +0600
+date: 2025-03-04 12:52 -0600
 categories: spring
 tags: spring-boot
 ---
